@@ -1,0 +1,12 @@
+.rebar/
+.erlang.mk/
+log/
+logs/
+deps/
+.eunit
+ebin
+*.o
+*.beam
+*.plt
+erl_crash.dump
+*.d
