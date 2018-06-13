@@ -6,6 +6,6 @@ DEPS = egherkin
 
 dep_egherkin = git https://github.com/jabberbees/egherkin
 
-include erlang.mk
+include $(if $(ERLANG_MK_FILENAME),$(ERLANG_MK_FILENAME),erlang.mk)
 
 include debug.mk
