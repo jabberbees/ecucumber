@@ -1,5 +1,3 @@
-
-
 # ecucumber
 
 ecucumber is an open source port of [Cucumber](https://cucumber.io/) for Erlang.
@@ -66,6 +64,12 @@ Example: features/addition.feature
         Then the result should be 120 on the screen
 
 Please look at the reference guide below if you need more information on how to write tests.
+
+Run make once to have ecucumber detect the new test.
+
+    make
+
+You need to run make once each time you add new Gherkin tests.
 
 ### Execute tests
 At this stage your test is executable even though you have not provided any Erlang code.
@@ -141,7 +145,7 @@ Notice also that one of the step definitions is calling maths:add/1 which we sti
 ### Bind step definitions
 If you run the test again, you will get the same errors (missing step definitions) because we have not told ecucumber how to find our new step definitions.
 
-For this, you need to add @mod:<module> Gherkin tags above the *Feature:* or relevant *Scenario:* keywords to activate your step definitions modules.
+For this, you need to add @mod:\<module\> Gherkin tags above the *Feature:* or relevant *Scenario:* keywords to activate your step definitions modules.
  
 Example: features/addition.feature
 
@@ -155,7 +159,17 @@ Example: features/addition.feature
         Then the result should be 120 on the screen
 
 ### Provide the test to code
-If you run the test now, you will get an *undef* error because one of the step definitions is calling maths:add/1 which we still have not provided. This is the actual business code that we are writing tests for.
+If you run the test now, you will get an *undef* error because one of the step definitions is calling maths:add/1 which we still have not provided.
+
+    Testing testing.test.feature_addition_SUITE: Starting test, 1 test cases
+    - - - - - - - - - - - - - - - - - - - - - - - - - -
+    maths:add failed
+    Reason: undef
+    - - - - - - - - - - - - - - - - - - - - - - - - - -
+    Testing testing.test.feature_addition_SUITE: *** FAILED test case 1 of 1 ***
+    Testing testing.test.feature_addition_SUITE: TEST COMPLETE, 0 ok, 1 failed of 1 test cases
+
+maths is the actual business code that we are writing tests for.
 
 Here it is.
 
@@ -171,10 +185,18 @@ Example: src/maths.erl
 ### Run tests
     make ct
 
+And voilà! Your test passed!
+
+    TEST INFO: 1 test(s), 1 case(s) in 1 suite(s)
+
+    Testing testing.test.feature_addition_SUITE: Starting test, 1 test cases
+    Testing testing.test.feature_addition_SUITE: TEST COMPLETE, 1 ok, 0 failed of 1 test cases
+
 ### Iterate
-- Add tests
-- Add step definitions
-- Add business logic
+And now the fun starts:
+- Add more tests
+- Add more step definitions
+- Add more business logic
 - Test, implement, modify, refactor until all tests pass
 
 ## Reference guide: writing tests
