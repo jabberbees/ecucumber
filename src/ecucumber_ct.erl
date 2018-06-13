@@ -25,6 +25,8 @@
 
 generate_source(Filename, Options) ->
     case egherkin:parse_file(Filename) of
+    {error, _} = Error ->
+        Error;
     {failed, Line, Error} ->
         {error, {gherkin, Line, Error}};
     Feature ->
@@ -45,7 +47,10 @@ generate_ct_suite(Filename, SourceFilename, Feature) ->
         AllCode,
         TestCaseCode
     ],
-    file:write_file(Filename, Source).
+    case file:write_file(Filename, Source) of
+    ok -> {ok, Filename};
+    Else -> Else
+    end.
 
 generate_header(SourceFilename, Filename) ->
     [
