@@ -12,48 +12,41 @@ Testing a feature using ecucumber should be as *easy* as writing a Common Test t
 
 ecucumber is *clean* and *well tested* Erlang code.
 
-## How to build and use
+## How to use
 
-ecucumber uses [erlang.mk](https://erlang.mk/) as build tool so you only need a recent version of *make*:
+ecucumber only supports [erlang.mk](https://erlang.mk/) as a build tool for the moment.
 
-	git clone https://github.com/jabberbees/ecucumber
-	cd ecucumber
-	make
-
-To run tests:
-
-	make ct
-
-To use: add ecucumber as a test dependency in your erlang.mk based Makefile, before including erlang.mk.
+You only need to add ecucumber as a test dependency in your Makefile, before including erlang.mk.
 
     TEST_DEPS = ecucumber
-
-    dep_ecucumber = git https://github.com/jabberbees/ecucumber.git
-
     DEP_PLUGINS = ecucumber
-
+    dep_ecucumber = git https://github.com/jabberbees/ecucumber.git
 
 ## Tutorial: the BDD workflow with ecucumber
 
-### Create an empty Erlang project
-Add erlang.mk to your project. Check [here](https://erlang.mk/guide/getting_started.html) if need help to do this.
+### Create a new Erlang project
 
-### Add ecucumber dependency in your Makefile
+Create an empty Erlang project
 
-Example:
+Add erlang.mk to your project.
+
+Check [here](https://erlang.mk/guide/getting_started.html) if need you help to do this.
+
+### Add the following Makefile
 
     PROJECT = test
 
     TEST_DEPS = ecucumber
 
-    dep_ecucumber = git https://github.com/jabberbees/ecucumber.git
-
     DEP_PLUGINS = ecucumber
+
+    dep_ecucumber = git https://github.com/jabberbees/ecucumber.git
 
     include erlang.mk
 
-### Write tests
-Example: features/addition.feature
+### Add the first test
+
+File: features/addition.feature
 
     Feature: Addition
 
@@ -69,7 +62,7 @@ Run make once to have ecucumber detect the new test.
 
     make
 
-You need to run make once each time you add new Gherkin tests.
+FYI you need to run make once each time you add new Gherkin tests.
 
 ### Execute tests
 At this stage your test is executable even though you have not provided any Erlang code.
@@ -112,7 +105,7 @@ You just need to copy and paste these step definitions into a step definitions E
 ### Provide test definitions modules
 Here is the complete step definitions module for the above test.
 
-Example: test/maths_step_defs.erl
+File: test/maths_step_defs.erl
 
     -module(maths_step_defs).
 
@@ -147,7 +140,7 @@ If you run the test again, you will get the same errors (missing step definition
 
 For this, you need to add @mod:\<module\> Gherkin tags above the *Feature:* or relevant *Scenario:* keywords to activate your step definitions modules.
  
-Example: features/addition.feature
+File to modify: features/addition.feature
 
     @mod:maths_steps_defs
     Feature: Addition
@@ -173,7 +166,7 @@ maths is the actual business code that we are writing tests for.
 
 Here it is.
 
-Example: src/maths.erl
+File: src/maths.erl
 
     -module(maths).
 
@@ -290,7 +283,27 @@ Add the following to your .gitignore file:
 
 Please contribute!
 
+## How to contribute
+You can contribute by using ecucumber.
+
+You can contribute by providing feedback through tickets.
+
+You can contribute by submitting code and then it's business as usual:
+- fork the project’s repository on GitHub by clicking on the Fork button.
+- clone your forked repository locally
+- create your local branch based on master
+- modify/extend the code and provide tests (untested changes will not be merged)
+- run all tests (commits with failing tests will not be merged)
+
+    make ct
+
+- add your changes, commit and push
+- submit the pull request using the GitHub interface with an explanatory message
+
 ## Compatibility
 
 ecucumber was developed and tested with **Erlang/OTP R16B03-1** on Windows 10.
-Please report any compatibility issue you encounter.
+
+The code only uses basic Erlang syntax and standard modules. It should work on all platforms and Erlang versions.
+
+Please report any compatibility issue you encounter by opening a ticket.
