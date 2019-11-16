@@ -103,7 +103,16 @@ generate_testcases(Feature) ->
     {Names, Code} = lists:unzip(TestCases),
     AllCode = [
         <<"all() -> [">>, ?NL,
-            [[?TAB, Name, ?NL] || Name <- Names],
+            case Names of
+            [] ->
+                [];
+            [First | Following] ->
+                [
+                    [?TAB, First],
+                    [[<<",">>, ?NL, ?TAB, Name] || Name <- Following],
+                    ?NL
+                ]
+            end,
         <<"].">>, ?NL,
         ?NL
     ],
