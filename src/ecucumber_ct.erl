@@ -66,9 +66,11 @@ generate_header(SourceFilename, Filename) ->
 
 generate_ct_callbacks(Feature) ->
     FeatureName = egherkin_feature:name(Feature),
+    Background = egherkin_feature:background(Feature),
     {ModList, TagList} = parse_tags(egherkin_feature:tag_names(Feature)),
     {SetupN, Setup} = generate_mod_calls(<<"setup">>, 0, ModList),
     {CleanupN, Cleanup} = generate_mod_calls(<<"cleanup">>, 0, lists:reverse(ModList)),
+    {BackgroundN, BackgroundSrc} = generate_background(Background, 0),
     [
         <<"init_per_suite(Config) ->">>, ?NL,
         ?TAB, s(0), <<" = ecucumber_ct_context:enter_feature(">>, b(FeatureName), <<", Config),">>, ?NL,
@@ -80,8 +82,9 @@ generate_ct_callbacks(Feature) ->
         Cleanup,
         ?TAB, s(CleanupN), <<".">>, ?NL,
         ?NL,
-        <<"init_per_testcase(_TestCase, Config) ->">>, ?NL,
-        ?TAB, <<"Config.">>, ?NL,
+        <<"init_per_testcase(_TestCase, ">>, s(0), <<") ->">>, ?NL,
+        BackgroundSrc,
+        ?TAB, s(BackgroundN), <<".">>, ?NL,
         ?NL,
         <<"end_per_testcase(_TestCase, Config) ->">>, ?NL,
         ?TAB, <<"Config.">>, ?NL,
@@ -105,6 +108,17 @@ generate_testcases(Feature) ->
         ?NL
     ],
     {AllCode, Code}.
+
+generate_background(undefined, N0) ->
+    {N0, []};
+generate_background(Background, N0) ->
+    Steps = egherkin_background:steps(Background),
+    {N, StepsSrc} = generate_steps(N0, Steps),
+    Source = [
+        ?TAB, <<"Mods = feature_mods(),">>, ?NL,
+        StepsSrc
+    ],
+    {N, Source}.
 
 generate_testcase(Scenario) ->
     Name = egherkin_scenario:name(Scenario),
