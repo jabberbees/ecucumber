@@ -43,7 +43,10 @@ all() -> [
     add_value_appends_value,
 
     delete_value_removes_value,
-    delete_value_does_nothing
+    delete_value_does_nothing,
+
+    delete_values_removes_value,
+    delete_values_does_nothing
 ].
 
 %%region is_defined
@@ -101,6 +104,21 @@ delete_value_removes_value(_) ->
 delete_value_does_nothing(_) ->
     C = ecucumber_ct_context:set_value(stuff, 42, []),
     ?assertEqual(C, ecucumber_ct_context:delete_value(items, C)),
+    ok.
+
+%%endregion
+
+%%region delete_values
+
+delete_values_removes_value(_) ->
+    C1 = ecucumber_ct_context:set_value(items, 42, []),
+    C2 = ecucumber_ct_context:delete_values([items], C1),
+    ?assertEqual(false, ecucumber_ct_context:is_defined(items, C2)),
+    ok.
+
+delete_values_does_nothing(_) ->
+    C = ecucumber_ct_context:set_value(stuff, 42, []),
+    ?assertEqual(C, ecucumber_ct_context:delete_values([items], C)),
     ok.
 
 %%endregion

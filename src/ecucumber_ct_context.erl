@@ -29,7 +29,8 @@
     get_value/3,
     set_value/3,
     add_value/3,
-    delete_value/2
+    delete_value/2,
+    delete_values/2
 ]).
 
 enter_feature(_FeatureName, Context) ->
@@ -82,3 +83,8 @@ add_value(Key, Value, Context) ->
 
 delete_value(Key, Context) ->
     lists:keydelete(Key, 1, Context).
+
+delete_values(Keys, Context) ->
+    lists:foldl(fun(Key, Acc) ->
+        lists:keydelete(Key, 1, Acc)
+    end, Context, Keys).
