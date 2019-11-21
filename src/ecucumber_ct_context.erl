@@ -23,7 +23,7 @@
     enter_scenario/3,
     leave_scenario/1,
     
-    execute_step_def/4,
+    execute_step_def/5,
 
     is_defined/2,
     get_value/3,
@@ -48,10 +48,18 @@ leave_scenario(Context) ->
     false -> Context
     end.
 
-execute_step_def(GWT, StepParts, [], Context) ->
+execute_step_def(Line, GWT, StepParts, Mods, Context) ->
     ct:pal(info,
+        "[~p] ~s ~s",
+        [Line, egherkin_lib:format_gwt(GWT), egherkin_lib:format_step_parts(StepParts)]
+    ),
+    Context1 = set_value(ecucumber_line, Line, Context),
+    execute_step_def(GWT, StepParts, Mods, Context1).
+
+execute_step_def(GWT, StepParts, [], Context) ->
+    ct:pal(error,
         "failed to find step definition!~n"
-        "please add following implementation:~n"
+        "please add following implementation in one of your step definitions modules:~n"
         "~n"
         "step_def(~s, ~p, Context) ->~n"
         "   Context."
@@ -61,8 +69,11 @@ execute_step_def(GWT, StepParts, [], Context) ->
     [{ecucumber_failed, true} | Context];
 execute_step_def(GWT, StepParts, [Mod | Mods], Context) ->
     case Mod:step_def(GWT, StepParts, Context) of
-    nomatch -> execute_step_def(GWT, StepParts, Mods, Context);
-    NewContext -> NewContext
+    nomatch ->
+        execute_step_def(GWT, StepParts, Mods, Context);
+    NewContext ->
+        ct:pal(info, "done"),
+        NewContext
     end.
 
 is_defined(Key, Context) ->

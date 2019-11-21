@@ -159,7 +159,7 @@ generate_mod_calls(Function, Start, ModList) ->
     {Start+length(ModList), Code}.
 
 generate_steps(Start, Steps) ->
-    {_, Code} = lists:foldl(fun({I, {_, GWTAB, StepParts}}, {LastGWT, Src}) ->
+    {_, Code} = lists:foldl(fun({I, {Line, GWTAB, StepParts}}, {LastGWT, Src}) ->
         GWT = case GWTAB of
         and_keyword -> LastGWT;
         but_keyword -> LastGWT;
@@ -168,8 +168,9 @@ generate_steps(Start, Steps) ->
         PartsSrc = io_lib:format("~p", [StepParts]),
         StepSrc = [
             ?TAB, s(I+1), <<" = ecucumber_ct_context:execute_step_def(">>, ?NL,
-            ?TAB, ?TAB, atom_to_binary(GWT, latin1), <<", ">>, ?NL,
-            ?TAB, ?TAB, PartsSrc, <<", ">>, ?NL,
+            ?TAB, ?TAB, integer_to_binary(Line), <<",">>, ?NL,
+            ?TAB, ?TAB, atom_to_binary(GWT, latin1), <<",">>, ?NL,
+            ?TAB, ?TAB, PartsSrc, <<",">>, ?NL,
             ?TAB, ?TAB, <<"Mods, ">>, s(I), <<"),">>, ?NL
         ],
         {GWT, [StepSrc | Src]}
