@@ -80,7 +80,7 @@ ecucumber helps you by providing code templates for the missing step definitions
     TEST INFO: 1 test(s), 1 case(s) in 1 suite(s)
     ...
     failed to find step definition!
-    please add following implementation:
+    please add following implementation in one of your step definitions modules:
 
     step_def(given_keyword, [<<"I">>,<<"have">>,<<"entered">>,<<"50">>,<<"into">>,
                             <<"the">>,<<"calculator">>], Context) ->
@@ -102,7 +102,7 @@ ecucumber helps you by providing code templates for the missing step definitions
 
 You just need to copy and paste these step definitions into a step definitions Erlang module.
 
-### Provide test definitions modules
+### Provide step definitions modules
 Here is the complete step definitions module for the above test.
 
 File: test/maths_step_defs.erl
