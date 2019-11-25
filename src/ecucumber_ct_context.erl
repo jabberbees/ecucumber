@@ -17,6 +17,9 @@
 -module(ecucumber_ct_context).
 
 -export([
+    new/0,
+    new/1,
+
     enter_feature/2,
     leave_feature/1,
 
@@ -32,6 +35,12 @@
     delete_value/2,
     delete_values/2
 ]).
+
+new() ->
+    [].
+
+new(PropList) ->
+    PropList.
 
 enter_feature(_FeatureName, Context) ->
     Context.
