@@ -42,13 +42,15 @@ new() ->
 new(PropList) ->
     PropList.
 
-enter_feature(_FeatureName, Context) ->
+enter_feature(FeatureName, Context) ->
+    ct:pal("Entering feature: ~s", [FeatureName]),
     Context.
 
 leave_feature(Context) ->
     Context.
 
-enter_scenario(_ScenarioName, Tags, Context) ->
+enter_scenario(ScenarioName, Tags, Context) ->
+    ct:pal("Entering scenario: ~s", [ScenarioName]),
     [{ecucumber_tags, Tags} | Context].
 
 leave_scenario(Context) ->
@@ -58,7 +60,7 @@ leave_scenario(Context) ->
     end.
 
 execute_step_def(Line, GWT, StepParts, Mods, Context) ->
-    ct:pal(info,
+    ct:log(info,
         "[~p] ~s ~s",
         [Line, egherkin_lib:format_gwt(GWT), egherkin_lib:format_step_parts(StepParts)]
     ),
@@ -81,7 +83,7 @@ execute_step_def(GWT, StepParts, [Mod | Mods], Context) ->
     nomatch ->
         execute_step_def(GWT, StepParts, Mods, Context);
     NewContext ->
-        ct:pal(info, "done"),
+        ct:log(info, "done"),
         NewContext
     end.
 
